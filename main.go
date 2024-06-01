@@ -213,3 +213,5 @@ func uploadArt(token string, artType int, title string, desc string, filename st
 	}
 
 }
+
+// 构建 go build -ldflags '-s -w'
