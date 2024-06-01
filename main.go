@@ -37,6 +37,14 @@ type ArtReq struct {
 	AType     int    `json:"atype"`
 }
 
+type ArtL1Req struct {
+	Title     string `json:"title"`
+	Desc      string `json:"desc"`
+	Tags      int    `json:"tags"`
+	Content   string `json:"content"`
+	LockState int    `json:"lockstate"`
+}
+
 const (
 	OPEN_URL = "https://open.91demo.top/open"
 )
@@ -171,18 +179,28 @@ func uploadArt(token string, artType int, title string, desc string, filename st
 		snippet = string(filecontent)
 	}
 
-	art := ArtReq{
-		Title:     title,
-		Desc:      desc,
-		Tags:      tag,
-		Github:    github,
-		Snippet:   snippet,
-		AType:     artType,
-		LockState: lockstate,
-	}
-
 	reqBody := new(bytes.Buffer)
-	json.NewEncoder(reqBody).Encode(art)
+	if artType == 3 {
+		art := ArtL1Req{
+			Title:     title,
+			Desc:      desc,
+			Tags:      tag,
+			Content:   snippet,
+			LockState: lockstate,
+		}
+		json.NewEncoder(reqBody).Encode(art)
+	} else {
+		art := ArtReq{
+			Title:     title,
+			Desc:      desc,
+			Tags:      tag,
+			Github:    github,
+			Snippet:   snippet,
+			AType:     artType,
+			LockState: lockstate,
+		}
+		json.NewEncoder(reqBody).Encode(art)
+	}
 
 	req, err := http.NewRequest("POST", url, reqBody)
 	if err != nil {
