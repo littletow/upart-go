@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -69,7 +70,13 @@ func main() {
 	flag.Parse()
 	var err error
 
-	cfg, err := ini.Load("conf.ini")
+	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		fmt.Println("Fail to get os dir,", err)
+		os.Exit(1)
+	}
+	confFile := filepath.Join(dir, "conf.ini")
+	cfg, err := ini.Load(confFile)
 	if err != nil {
 		fmt.Println("Fail to read conf file,", err)
 		os.Exit(1)
