@@ -72,6 +72,8 @@ func init() {
 
 func printHelp() {
 	fmt.Println("./upart.exe -a 1 -b title -d desc -f filename -g github -t tag -l lockstate")
+	fmt.Println("article type: 1,snippet 2,lib 3,article")
+	fmt.Println("tag value: 1,rust 2,go 3,mp 4,web 5,sql 6,dev")
 }
 
 func main() {
@@ -104,7 +106,7 @@ func main() {
 		expireAtStr := strconv.FormatInt(now+7000, 10)
 		cfg.Section("User").Key("token").SetValue(token)
 		cfg.Section("User").Key("expire_at").SetValue(expireAtStr)
-		cfg.SaveTo("conf.ini")
+		cfg.SaveTo(confFile)
 	}
 	if token == "" || artType == 0 || title == "" || desc == "" {
 		printHelp()
