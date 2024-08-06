@@ -28,52 +28,38 @@ type RespMsg struct {
 }
 
 type ArtReq struct {
-	Title     string `json:"title"`
-	Desc      string `json:"desc"`
-	Tags      int    `json:"tags"`
-	Github    string `json:"github"`
-	Snippet   string `json:"snippet"`
-	LockState int    `json:"lockstate"`
-	AType     int    `json:"atype"`
-}
-
-type ArtL1Req struct {
-	Title     string `json:"title"`
-	Desc      string `json:"desc"`
-	Tags      int    `json:"tags"`
-	Content   string `json:"content"`
-	LockState int    `json:"lockstate"`
+	Title   string `json:"title"`
+	Keyword string `json:"keyword"`
+	Content string `json:"content"`
+	IsLock  int    `json:"islock"`
+	IsPub   int    `json:"ispub"`
 }
 
 const (
-	OPEN_URL = "https://open.91demo.top/open"
+	OPEN_URL = "https://open.91demo.top/api/open"
 )
 
 var (
-	artType   int // 1 snippet 2 lib 3 art
-	title     string
-	desc      string
-	filename  string
-	github    string
-	tag       int // 1 rust 2 go 3 mp 4 web 5 sql 6 dev
-	lockstate int // 1 lock
+	title    string
+	keyword  string
+	filename string
+	ispub    int // 1 pub
+	islock   int // 1 lock
 
 )
 
 func init() {
-	flag.IntVar(&artType, "a", 1, "upload article type")
-	flag.StringVar(&title, "b", "", "article title")
-	flag.StringVar(&desc, "d", "", "article desc")
-	flag.StringVar(&filename, "f", "", "content filename")
-	flag.StringVar(&github, "g", "", "github url")
-	flag.IntVar(&tag, "t", 6, "article tag")
-	flag.IntVar(&lockstate, "l", 1, "article lockstate")
+	flag.StringVar(&title, "b", "", "文章题目")
+	flag.StringVar(&keyword, "k", "", "文章关键字")
+	flag.StringVar(&filename, "f", "", "MD文件")
+	flag.IntVar(&islock, "l", 0, "是否加锁")
+	flag.IntVar(&ispub, "p", 0, "是否开放")
 }
 
 func printHelp() {
-	fmt.Println("./upart.exe -a 1 -b title -d desc -f filename -g github -t tag -l lockstate")
-	fmt.Println("article type: 1,snippet 2,lib 3,article")
-	fmt.Println("tag value: 1,rust 2,go 3,mp 4,web 5,sql 6,dev")
+	fmt.Println("介绍")
+	fmt.Println("./upart.exe -b title -k keyword -f filename -l islock -p ispub")
+
 }
 
 func main() {
@@ -82,13 +68,13 @@ func main() {
 
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
-		fmt.Println("Fail to get os dir,", err)
+		fmt.Println("获取系统目录错误,", err)
 		os.Exit(1)
 	}
 	confFile := filepath.Join(dir, "conf.ini")
 	cfg, err := ini.Load(confFile)
 	if err != nil {
-		fmt.Println("Fail to read conf file,", err)
+		fmt.Println("读取配置文件错误,", err)
 		os.Exit(1)
 	}
 	icode := cfg.Section("User").Key("icode").String()
@@ -100,7 +86,7 @@ func main() {
 	if now > expireAt {
 		token, err = getToken(icode, isecret)
 		if err != nil {
-			fmt.Println("Fail to get token,", err)
+			fmt.Println("获取token错误,", err)
 			os.Exit(1)
 		}
 		expireAtStr := strconv.FormatInt(now+7000, 10)
@@ -108,19 +94,19 @@ func main() {
 		cfg.Section("User").Key("expire_at").SetValue(expireAtStr)
 		cfg.SaveTo(confFile)
 	}
-	if token == "" || artType == 0 || title == "" || desc == "" {
+	if token == "" || title == "" || filename == "" {
 		printHelp()
-		fmt.Println("Please provide upload article parameter")
+		fmt.Println("题目和Markdown文件名不能为空")
 		os.Exit(1)
 	}
 	// 上传文章
-	err = uploadArt(token, artType, title, desc, filename, tag, lockstate)
+	err = uploadArt(token, title, keyword, filename, ispub, islock)
 	if err != nil {
-		fmt.Println("Fail to upload article,", err)
+		fmt.Println("上传文章错误,", err)
 		os.Exit(1)
 	}
 
-	fmt.Println("Success to upload article")
+	fmt.Println("成功上传")
 }
 
 func getToken(icode string, isecret string) (string, error) {
@@ -149,60 +135,29 @@ func getToken(icode string, isecret string) (string, error) {
 	}
 }
 
-func uploadArt(token string, artType int, title string, desc string, filename string, tag int, lockstate int) error {
+func uploadArt(token string, title string, keyword string, filename string, ispub int, islock int) error {
 	if token == "" {
-		return errors.New("token is empty")
+		return errors.New("token不能为空")
 	}
 
 	url := fmt.Sprintf("%s/upArt?token=%s", OPEN_URL, token)
 
-	if artType == 1 {
-		if filename == "" {
-			return errors.New("filename is empty")
-		}
-	} else if artType == 2 {
-		if github == "" {
-			return errors.New("github is empty")
-		}
-	} else if artType == 3 {
-		if filename == "" {
-			return errors.New("filename is empty")
-		}
-		url = fmt.Sprintf("%s/upArtL1?token=%s", OPEN_URL, token)
+	filecontent, err := os.ReadFile(filename)
+	if err != nil {
+		return err
 	}
-
-	snippet := ""
-
-	if filename != "" {
-		filecontent, err := os.ReadFile(filename)
-		if err != nil {
-			return err
-		}
-		snippet = string(filecontent)
-	}
+	snippet := string(filecontent)
 
 	reqBody := new(bytes.Buffer)
-	if artType == 3 {
-		art := ArtL1Req{
-			Title:     title,
-			Desc:      desc,
-			Tags:      tag,
-			Content:   snippet,
-			LockState: lockstate,
-		}
-		json.NewEncoder(reqBody).Encode(art)
-	} else {
-		art := ArtReq{
-			Title:     title,
-			Desc:      desc,
-			Tags:      tag,
-			Github:    github,
-			Snippet:   snippet,
-			AType:     artType,
-			LockState: lockstate,
-		}
-		json.NewEncoder(reqBody).Encode(art)
+
+	art := ArtReq{
+		Title:   title,
+		Keyword: keyword,
+		Content: snippet,
+		IsPub:   ispub,
+		IsLock:  islock,
 	}
+	json.NewEncoder(reqBody).Encode(art)
 
 	req, err := http.NewRequest("POST", url, reqBody)
 	if err != nil {
