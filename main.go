@@ -36,7 +36,7 @@ type ArtReq struct {
 }
 
 const (
-	OPEN_URL = "https://open.91demo.top/api/open"
+	OPEN_URL = "https://www.91demo.top/api/open"
 )
 
 var (
@@ -110,7 +110,7 @@ func main() {
 }
 
 func getToken(icode string, isecret string) (string, error) {
-	url := fmt.Sprintf("%s/getAccessToken?icode=%s&isecret=%s", OPEN_URL, icode, isecret)
+	url := fmt.Sprintf("%s/vtoken?icode=%s&isecret=%s", OPEN_URL, icode, isecret)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -140,7 +140,7 @@ func uploadArt(token string, title string, keyword string, filename string, ispu
 		return errors.New("token不能为空")
 	}
 
-	url := fmt.Sprintf("%s/upArt?token=%s", OPEN_URL, token)
+	url := fmt.Sprintf("%s/upVArt?token=%s", OPEN_URL, token)
 
 	filecontent, err := os.ReadFile(filename)
 	if err != nil {
