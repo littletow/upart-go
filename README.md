@@ -2,8 +2,8 @@
 
 ## 使用方法
 
-将 conf-example.ini 文件完善后，修改为 conf.ini。将源文件编译后，和 exe 文件放在同一目录即可。
+将 conf-example.toml 文件完善后，修改为 conf.toml，放到用户目录，或者 exe 文件同一目录。
 
 ```
-./upart.exe -a 1 -b title -d desc -f filename -g github -t tag -l lockstate
+gart.exe upload title keyword filename ispub islock
 ```
