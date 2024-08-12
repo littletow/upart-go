@@ -1,6 +1,9 @@
 package utils
 
-import "strconv"
+import (
+	"strconv"
+	"time"
+)
 
 // Str2Int 字符串转为整数
 func Str2Int(str string) int {
@@ -24,4 +27,9 @@ func Str2Int64(str string) int64 {
 		return 0
 	}
 	return i
+}
+
+func TS2Str(ts time.Time) string {
+	str := ts.Format("2016-01-02 15:04:05")
+	return str
 }
