@@ -22,12 +22,16 @@ type RespMsg struct {
 	Msg  string `json:"msg"`
 }
 
-type ArtReq struct {
+type UploadArtReq struct {
 	Title   string `json:"title"`
 	Keyword string `json:"keyword"`
 	Content string `json:"content"`
 	IsLock  int    `json:"islock"`
 	IsPub   int    `json:"ispub"`
+}
+
+type RemoveArtReq struct {
+	Uuid string `json:"uuid"`
 }
 
 type ArtItem struct {
@@ -97,7 +101,7 @@ func UploadArt(token string, title string, keyword string, filename string, ispu
 
 	reqBody := new(bytes.Buffer)
 
-	art := ArtReq{
+	art := UploadArtReq{
 		Title:   title,
 		Keyword: keyword,
 		Content: snippet,
@@ -161,5 +165,48 @@ func SearchArt(token string, content string) ([]ArtItem, error) {
 		return result.Data, nil
 	} else {
 		return nil, errors.New(result.Msg)
+	}
+}
+
+// 删除文章
+func RemoveArt(token string, uuid string) error {
+	if token == "" {
+		return errors.New("token不能为空")
+	}
+
+	url := fmt.Sprintf("%s/rmVArt?token=%s", OPEN_URL, token)
+
+	reqBody := new(bytes.Buffer)
+	art := RemoveArtReq{
+		Uuid: uuid,
+	}
+	json.NewEncoder(reqBody).Encode(art)
+
+	req, err := http.NewRequest("POST", url, reqBody)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	var result RespMsg
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return err
+	}
+
+	if result.Code == 1 {
+		return nil
+	} else {
+		return errors.New(result.Msg)
 	}
 }

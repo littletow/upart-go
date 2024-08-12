@@ -28,7 +28,7 @@ var qCmd = &cobra.Command{
 			fmt.Println("查询发生错误,", err)
 		} else {
 			n := len(list)
-			if n > 1 {
+			if n > 0 {
 				var (
 					cts    string
 					uts    string
