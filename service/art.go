@@ -85,6 +85,16 @@ func GetToken(icode string, isecret string) (string, error) {
 	}
 }
 
+// 获取文章内容
+func GetFileContent(filename string) ([]byte, error) {
+	filecontent, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	return filecontent, nil
+}
+
 // 上传文章
 func UploadArt(token string, title string, keyword string, filename string, ispub int, islock int) error {
 	if token == "" {
@@ -181,6 +191,58 @@ func RemoveArt(token string, uuid string) error {
 		Uuid: uuid,
 	}
 	json.NewEncoder(reqBody).Encode(art)
+
+	req, err := http.NewRequest("POST", url, reqBody)
+	if err != nil {
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	var result RespMsg
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return err
+	}
+
+	if result.Code == 1 {
+		return nil
+	} else {
+		return errors.New(result.Msg)
+	}
+}
+
+// 更新文章请求
+type UpdateArtReq struct {
+	Uuid    string `json:"uuid"`    // uuid
+	Title   string `json:"title"`   // 题目
+	Keyword string `json:"keyword"` // 关键字
+	Content string `json:"content"` // 内容
+	IsPub   int    `json:"ispub"`   // 是否公开
+	IsLock  int    `json:"islock"`  // 是否加锁
+	UptType int    `json:"utype"`   // 更新类型 1，题目 2，关键字 3，内容 4，是否公开 5，是否加锁
+}
+
+// 更新文章信息
+func UpdateArt(token string, uar *UpdateArtReq) error {
+	if token == "" {
+		return errors.New("token不能为空")
+	}
+
+	url := fmt.Sprintf("%s/uptVArt?token=%s", OPEN_URL, token)
+
+	reqBody := new(bytes.Buffer)
+
+	json.NewEncoder(reqBody).Encode(uar)
 
 	req, err := http.NewRequest("POST", url, reqBody)
 	if err != nil {

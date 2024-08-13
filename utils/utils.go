@@ -30,6 +30,6 @@ func Str2Int64(str string) int64 {
 }
 
 func TS2Str(ts time.Time) string {
-	str := ts.Format("2016-01-02 15:04:05")
+	str := ts.Format("2006-01-02 15:04:05")
 	return str
 }
