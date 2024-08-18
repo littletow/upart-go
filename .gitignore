@@ -3,3 +3,4 @@ conf.toml
 conf.json
 conf.yaml
 *.exe
+gart*
