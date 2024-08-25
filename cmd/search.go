@@ -30,22 +30,24 @@ var qCmd = &cobra.Command{
 			n := len(list)
 			if n > 0 {
 				var (
-					cts    string
-					uts    string
-					ispub  string = "否"
-					islock string = "否"
+					cts string
+					uts string
 				)
 
 				t := table.NewWriter()
 				t.SetOutputMirror(os.Stdout)
 				t.AppendHeader(table.Row{"UUID", "题目", "关键字", "是否公开", "是否加锁", "创建时间", "修改时间"})
 				for _, v := range list {
+					ispub := "否"
+					islock := "否"
 					cts = utils.TS2Str(v.Createtime)
 					uts = utils.TS2Str(v.Updatetime)
-					if v.IsPub == 1 {
+					vIsPub := v.IsPub
+					vIsLock := v.IsLock
+					if vIsPub == 1 {
 						ispub = "是"
 					}
-					if v.IsLock == 1 {
+					if vIsLock == 1 {
 						islock = "是"
 					}
 					t.AppendRows([]table.Row{
