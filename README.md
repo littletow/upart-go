@@ -7,3 +7,9 @@
 ```
 gart.exe upload title keyword filename ispub islock
 ```
+
+## 使用工具上传文章步骤
+
+1. 制作 markdown 文件
+2. 将文件放置到 files 文件夹中
+3. 调用工具上传文章
