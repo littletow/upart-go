@@ -1,0 +1,3 @@
+1，将conf-example.toml改成conf.toml
+2，从豆子碎片小程序中获取icode和isecret
+3，执行命令即可。
