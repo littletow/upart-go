@@ -316,7 +316,7 @@ func GetValidCity(token string, province string) (string, error) {
 		return "", errors.New("token不能为空")
 	}
 
-	url := fmt.Sprintf("%s/getVValidProvince?token=%s&province=%s", OPEN_URL, token, province)
+	url := fmt.Sprintf("%s/getVValidCity?token=%s&province=%s", OPEN_URL, token, province)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
