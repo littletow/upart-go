@@ -54,6 +54,12 @@ type SearchArtRsp struct {
 	Data []ArtItem `json:"data"`
 }
 
+type AreaRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data string `json:"data"`
+}
+
 const (
 	OPEN_URL = "https://www.91demo.top/api/open"
 )
@@ -223,13 +229,15 @@ func RemoveArt(token string, uuid string) error {
 
 // 更新文章请求
 type UpdateArtReq struct {
-	Uuid    string `json:"uuid"`    // uuid
-	Title   string `json:"title"`   // 题目
-	Keyword string `json:"keyword"` // 关键字
-	Content string `json:"content"` // 内容
-	IsPub   int    `json:"ispub"`   // 是否公开
-	IsLock  int    `json:"islock"`  // 是否加锁
-	UptType int    `json:"utype"`   // 更新类型 1，题目 2，关键字 3，内容 4，是否公开 5，是否加锁
+	Uuid     string `json:"uuid"`     // uuid
+	Title    string `json:"title"`    // 题目
+	Keyword  string `json:"keyword"`  // 关键字
+	Content  string `json:"content"`  // 内容
+	IsPub    int    `json:"ispub"`    // 是否公开
+	IsLock   int    `json:"islock"`   // 是否加锁
+	AreaFlag int    `json:"areaflag"` // 区域限制标志，0 不限制 1 限制国家 2 限制省份 3 限制城市
+	AreaCont string `json:"areacont"` // 区域内容
+	UptType  int    `json:"utype"`    // 更新类型 1，题目 2，关键字 3，内容 4，是否公开 5，是否加锁 6，同城 7，强制公开文章
 }
 
 // 更新文章信息
@@ -270,5 +278,63 @@ func UpdateArt(token string, uar *UpdateArtReq) error {
 		return nil
 	} else {
 		return errors.New(result.Msg)
+	}
+}
+
+// 获取有效省份
+func GetValidProvince(token string) (string, error) {
+	if token == "" {
+		return "", errors.New("token不能为空")
+	}
+
+	url := fmt.Sprintf("%s/getVValidProvince?token=%s", OPEN_URL, token)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	var result AreaRsp
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return "", err
+	}
+
+	if result.Code == 1 {
+		return result.Data, nil
+	} else {
+		return "", errors.New(result.Msg)
+	}
+}
+
+// 获取有效城市
+func GetValidCity(token string, province string) (string, error) {
+	if token == "" {
+		return "", errors.New("token不能为空")
+	}
+
+	url := fmt.Sprintf("%s/getVValidProvince?token=%s&province=%s", OPEN_URL, token, province)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+	var result AreaRsp
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return "", err
+	}
+
+	if result.Code == 1 {
+		return result.Data, nil
+	} else {
+		return "", errors.New(result.Msg)
 	}
 }
