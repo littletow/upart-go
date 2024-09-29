@@ -14,8 +14,8 @@ func init() {
 
 var validAreaCmd = &cobra.Command{
 	Use:   "area",
-	Short: "获取有效省份及城市，1查询省份，2查询城市，后面带省份",
-	Long:  `获取有效省份及城市，1查询省份，2查询城市，后面带省份，用于文章同城限制。`,
+	Short: "获取有效省份及城市，1为查询省份，2为查询城市，需要提供省份名称",
+	Long:  `获取有效省份及城市，1为查询省份，2为查询城市，需要提供省份名称，用于文章同城限制。`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		p1 := utils.Str2Int(args[0])
