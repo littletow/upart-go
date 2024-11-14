@@ -4,10 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"gart/service"
-	"gart/utils"
 	"os"
 	"path"
-	"strconv"
 	"time"
 
 	"github.com/mitchellh/go-homedir"
@@ -16,8 +14,9 @@ import (
 )
 
 var (
-	cfgFile string
-	token   string
+	cfgFile  string
+	token    string
+	isEnable bool
 )
 
 func init() {
@@ -48,10 +47,11 @@ func initConfig() {
 			viper.SetConfigName("upart")
 			viper.SetConfigType("toml")
 			// 设置默认值
-			viper.SetDefault("expire_at", "0")
+			viper.SetDefault("expire_at", 0)
 			viper.SetDefault("token", "")
 			viper.SetDefault("icode", "")
 			viper.SetDefault("isecret", "")
+			viper.SetDefault("is_enable", false)
 			err = viper.WriteConfig()
 			if err != nil {
 				fmt.Println("写入配置文件错误,", err)
@@ -70,10 +70,13 @@ func initConfig() {
 		os.Exit(1)
 	}
 	// 每次启动都调用token
-	err := GetToken()
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	isEnable = viper.GetBool("is_enable")
+	if isEnable {
+		err := GetToken()
+		if err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	}
 }
 
@@ -81,12 +84,10 @@ func GetToken() error {
 	var err error
 	icode := viper.GetString("icode")
 	isecret := viper.GetString("isecret")
-	expire := viper.GetString("expire_at")
-	expireAt := utils.Str2Int64(expire)
+	expireAt := viper.GetInt64("expire_at")
 	now := time.Now().Unix()
 	if icode == "" && isecret == "" {
-		// fmt.Println("请使用init 命令初始化配置。")
-		return errors.New("请使用 `gart init` 命令初始化配置。")
+		return errors.New("警告：请使用 `gart init` 命令初始化配置。")
 	}
 	if now > expireAt {
 		token, err = service.GetToken(icode, isecret)
@@ -94,8 +95,7 @@ func GetToken() error {
 			fmt.Println("获取token错误,", err)
 			return err
 		}
-		expireAtStr := strconv.FormatInt(now+7000, 10)
-		viper.Set("expire_at", expireAtStr)
+		viper.Set("expire_at", now+7000)
 		viper.Set("token", token)
 		err = viper.WriteConfig()
 		if err != nil {
@@ -113,6 +113,7 @@ var rootCmd = &cobra.Command{
 	Short: "gart 是文章管理命令行工具。",
 	Long:  `gart 是文章管理命令行工具，主要用来管理豆子碎片小程序中的文章。`,
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		fmt.Println("该命令行工具用来管理豆子碎片小程序的文章。")
 	},
 }

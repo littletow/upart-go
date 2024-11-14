@@ -18,6 +18,7 @@ var uptPublicCmd = &cobra.Command{
 	Long:  `更新文章是否公开，参数需要UUID，新的公开开关，只允许0或1,1为公开，需要先获取文章的UUID。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		ispub := utils.Str2Int(args[1])
 		uar := service.UpdateArtReq{

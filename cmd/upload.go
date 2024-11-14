@@ -23,6 +23,7 @@ var upCmd = &cobra.Command{
 	`,
 	Args: cobra.RangeArgs(3, 5),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		var (
 			title    string
 			keyword  string

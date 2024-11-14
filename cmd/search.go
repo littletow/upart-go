@@ -20,7 +20,7 @@ var qCmd = &cobra.Command{
 	Long:  `查找文章， 根据文章的标题和关键字匹配查询，最多返回20条记录。可以输入更多的内容进行精确查找。`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-
+		CheckBindAccount()
 		content := args[0]
 
 		list, err := service.SearchArt(token, content)

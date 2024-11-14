@@ -17,6 +17,7 @@ var uptKeywordCmd = &cobra.Command{
 	Long:  `更新文章关键字，参数需要UUID，新的关键字，需要先获取文章的UUID。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		keyword := args[1]
 		uar := service.UpdateArtReq{

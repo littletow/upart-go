@@ -17,6 +17,7 @@ var uptTitleCmd = &cobra.Command{
 	Long:  `更新文章标题，参数需要UUID，新的标题，需要先获取文章的UUID。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		title := args[1]
 		uar := service.UpdateArtReq{

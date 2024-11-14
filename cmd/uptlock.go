@@ -18,6 +18,7 @@ var uptLockCmd = &cobra.Command{
 	Long:  `更新文章是否加锁，参数需要UUID，新的加锁开关，只允许0或1,1为加锁，需要先获取文章的UUID。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		islock := utils.Str2Int(args[1])
 		uar := service.UpdateArtReq{

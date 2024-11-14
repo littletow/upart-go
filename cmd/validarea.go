@@ -18,6 +18,7 @@ var validAreaCmd = &cobra.Command{
 	Long:  `获取有效省份及城市，1为查询省份，2为查询城市，需要提供省份名称，用于文章同城限制。`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		p1 := utils.Str2Int(args[0])
 		if p1 < 1 || p1 > 2 {
 			fmt.Println("只允许为1或2")

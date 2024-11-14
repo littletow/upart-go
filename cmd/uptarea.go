@@ -17,6 +17,7 @@ var uptAreaCmd = &cobra.Command{
 	Long:  `限制文章为同城访问，参数需要UUID，城市名称。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		city := args[1]
 

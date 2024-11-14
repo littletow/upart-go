@@ -17,6 +17,7 @@ var forcePublicCmd = &cobra.Command{
 	Long:  `强制更新文章公开，参数需要UUID，消耗10个豆子点数。`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		uar := service.UpdateArtReq{
 			Uuid:    uuid,

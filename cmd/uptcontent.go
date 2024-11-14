@@ -17,6 +17,7 @@ var uptContentCmd = &cobra.Command{
 	Long:  `更新文章内容，参数需要UUID，新的文件内容，需要先获取文章的UUID。`,
 	Args:  cobra.MinimumNArgs(2),
 	Run: func(cmd *cobra.Command, args []string) {
+		CheckBindAccount()
 		uuid := args[0]
 		filename := args[1]
 		content, err := service.GetFileContent(filename)
