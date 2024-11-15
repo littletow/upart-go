@@ -61,7 +61,8 @@ type AreaRsp struct {
 }
 
 const (
-	OPEN_URL = "https://www.91demo.top/api/open"
+	SHARE_KEY = "20!I@LOVE$CHINA#24"
+	OPEN_URL  = "https://www.91demo.top/api/open"
 )
 
 // 获取token
