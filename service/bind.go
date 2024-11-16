@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"gart/fonts"
 	"image/color"
@@ -64,23 +65,31 @@ func GetMacAddr() string {
 }
 
 // 连接Websocket
-func ConnWs() {
+func ConnWs(ctx context.Context, form *BindForm) error {
 	// 获取识别码，并接收绑定结果
-
+	// 连接Websocket
+	return nil
 }
 
 // 显示图片
 func ShowImage() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	// 使用ebtien显示
 	isEnable := viper.GetBool("is_enable")
 	fmt.Println("isEnable,", isEnable)
 	mac := GetMacAddr()
 	fmt.Println("mac,", mac)
-	ebiten.SetWindowSize(screenWidth, screenHeight)
-	ebiten.SetWindowTitle("Text (Ebitengine Demo)")
-	if err := ebiten.RunGame(&BindForm{}); err != nil {
+	form := BindForm{}
+	err := ConnWs(ctx, &form)
+	if err != nil {
 		log.Fatal(err)
 	}
+	// ebiten.SetWindowSize(screenWidth, screenHeight)
+	// ebiten.SetWindowTitle("Text (Ebitengine Demo)")
+	// if err := ebiten.RunGame(&BindForm{}); err != nil {
+	// 	log.Fatal(err)
+	// }
 }
 
 type BindForm struct {
