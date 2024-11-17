@@ -12,12 +12,14 @@ import (
 	"image/color"
 	"log"
 	"math"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/text/v2"
 	"github.com/hajimehoshi/ebiten/v2/vector"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -41,7 +43,7 @@ const (
 
 const (
 	logoText  = `豆子碎片`
-	macText   = `Mac地址：`
+	macText   = `MAC地址：`
 	vcodeText = `验证码：`
 	helpText  = `请使用微信扫描下方小程序码，
 然后输入验证码即可绑定账号。`
@@ -119,10 +121,22 @@ func WsRead(done chan struct{}, conn *websocket.Conn, form *BindForm) {
 		switch cmdMsg.Cmd {
 		case 1000:
 			form.Vcode = cmdMsg.Content
-			log.Println("验证码，", cmdMsg.Content)
 		case 1001:
 			content := cmdMsg.Content
-			log.Println("识别码，", content)
+			iarr := strings.Split(content, ",")
+			if len(iarr) == 2 {
+				icode := iarr[0]
+				isecret := iarr[1]
+				viper.Set("icode", icode)
+				viper.Set("isecret", isecret)
+				viper.Set("is_enable", true)
+				err := viper.WriteConfig()
+				if err != nil {
+					fmt.Println("写入配置文件错误,", err)
+				} else {
+					fmt.Println("绑定成功")
+				}
+			}
 		}
 	}
 }
@@ -187,8 +201,7 @@ func ShowImage() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	// 使用ebtien显示
-	// isEnable := viper.GetBool("is_enable")
-	// fmt.Println("isEnable,", isEnable)
+
 	form := BindForm{}
 	err := WsConn(ctx, &form)
 	if err != nil {

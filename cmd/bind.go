@@ -18,7 +18,12 @@ var initCmd = &cobra.Command{
 		// 匹配成功后，写入到配置文件，并返回结果。
 		// 绑定成功后，图片应用退出。结束绑定。
 		fmt.Println("实现插入配置文件")
-		service.ShowImage()
+		if !isEnable {
+			service.ShowImage()
+		} else {
+			fmt.Println("已绑定账户")
+		}
+
 	},
 }
 
