@@ -60,6 +60,12 @@ type AreaRsp struct {
 	Data string `json:"data"`
 }
 
+type PointRsp struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data int    `json:"data"`
+}
+
 const (
 	SHARE_KEY = "20!I@LOVE$CHINA#24"
 	OPEN_URL  = "https://www.91demo.top/api/open"
@@ -89,6 +95,33 @@ func GetToken(icode string, isecret string) (string, error) {
 		return result.Data, nil
 	} else {
 		return "", errors.New(result.Msg)
+	}
+}
+
+// 获取豆子点数
+func GetPoints(token string) (int, error) {
+	if token == "" {
+		return 0, errors.New("token不能为空")
+	}
+	url := fmt.Sprintf("%s/oqpt?token=%s", OPEN_URL, token)
+	resp, err := http.Get(url)
+	if err != nil {
+		return 0, err
+	}
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return 0, err
+	}
+	var result PointRsp
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return 0, err
+	}
+	if result.Code == 1 {
+		return result.Data, nil
+	} else {
+		return 0, errors.New(result.Msg)
 	}
 }
 

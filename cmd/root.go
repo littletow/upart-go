@@ -77,6 +77,11 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+		// points, err = service.GetPoints(token)
+		// if err != nil {
+		// 	fmt.Println(err)
+		// 	os.Exit(1)
+		// }
 	}
 }
 
@@ -113,8 +118,8 @@ var rootCmd = &cobra.Command{
 	Short: "gart 是文章管理命令行工具。",
 	Long:  `gart 是文章管理命令行工具，主要用来管理豆子碎片小程序中的文章。`,
 	Run: func(cmd *cobra.Command, args []string) {
-		CheckBindAccount()
-		fmt.Println("该命令行工具用来管理豆子碎片小程序的文章。")
+		// CheckBindAccount()
+		fmt.Println("介绍这个工具，组织一些语言。")
 	},
 }
 

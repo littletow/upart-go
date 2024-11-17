@@ -66,7 +66,7 @@ var (
 )
 
 func init() {
-	img, _, err := image.Decode(bytes.NewReader(fonts.VisitCode))
+	img, _, err := image.Decode(bytes.NewReader(fonts.VisitBindCode))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -197,7 +197,7 @@ func WsConn(ctx context.Context, form *BindForm) error {
 }
 
 // 显示图片
-func ShowImage() {
+func ShowBindCode() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	// 使用ebtien显示

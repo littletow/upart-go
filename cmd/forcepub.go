@@ -18,6 +18,7 @@ var forcePublicCmd = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		CheckBindAccount()
+		CheckPoints(10)
 		uuid := args[0]
 		uar := service.UpdateArtReq{
 			Uuid:    uuid,
