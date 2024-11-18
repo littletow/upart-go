@@ -107,7 +107,7 @@ func WsRead(done chan struct{}, conn *websocket.Conn, form *BindForm) {
 			log.Println("read:", err)
 			return
 		}
-		log.Printf("recv: %s", message)
+		// log.Printf("recv: %s", message)
 		var cmdMsg CmdMsg
 		err = json.Unmarshal(message, &cmdMsg)
 		if err != nil {
@@ -155,7 +155,7 @@ func WsWrite(ctx context.Context, done chan struct{}, conn *websocket.Conn) {
 				return
 			}
 		case <-ctx.Done():
-			log.Println("interrupt")
+			// log.Println("interrupt")
 			// Cleanly close the connection by sending a close message and then
 			// waiting (with timeout) for the server to close the connection.
 			err := conn.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
