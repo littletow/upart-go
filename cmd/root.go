@@ -44,7 +44,7 @@ var (
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/upart.toml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/gart.toml)")
 }
 
 func initConfig() {
@@ -57,7 +57,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 		// 检查文件是否存在？
-		fileName := path.Join(home, "upart.toml")
+		fileName := path.Join(home, "gart.toml")
 		_, err = os.Stat(fileName)
 		if err != nil {
 			// 第一次创建
@@ -67,7 +67,7 @@ func initConfig() {
 				os.Exit(1)
 			}
 			viper.AddConfigPath(home)
-			viper.SetConfigName("upart")
+			viper.SetConfigName("gart")
 			viper.SetConfigType("toml")
 			// 设置默认值
 			viper.SetDefault("expire_at", 0)
@@ -83,7 +83,7 @@ func initConfig() {
 		} else {
 			viper.AddConfigPath(home)
 			// viper.AddConfigPath(".")
-			viper.SetConfigName("upart")
+			viper.SetConfigName("gart")
 			viper.SetConfigType("toml")
 		}
 	}
