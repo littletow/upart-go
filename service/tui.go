@@ -8,7 +8,7 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 )
 
-var choices = []string{"做公益", "看广告", "退出"}
+var choices = []string{"期待功能", "赚豆子点数", "我要退出"}
 
 type model struct {
 	cursor int
@@ -50,7 +50,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) View() string {
 	s := strings.Builder{}
-	s.WriteString("😣，您的豆子点数不足，您可以选择其中一项？\n\n")
+	s.WriteString("😣，您的豆子点数不足，您可以选择其中一项继续操作？\n\n")
 
 	for i := 0; i < len(choices); i++ {
 		if m.cursor == i {
@@ -81,7 +81,7 @@ func RunTui() {
 		fmt.Printf("\n---\n您选择了 %s!\n", m.choice)
 		switch m.cursor {
 		case 0:
-			fmt.Println("现在还没有实现哟！")
+			fmt.Println("即将实现，请请期待！")
 		case 1:
 			fmt.Println("扫描小程序码，看广告赚豆子点数。")
 			ShowAdCode()

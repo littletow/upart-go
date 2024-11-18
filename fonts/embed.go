@@ -11,4 +11,6 @@ var (
 	VisitAdCode []byte
 	//go:embed visit-bind.png
 	VisitBindCode []byte
+	//go:embed visit.jpg
+	VisitCode []byte
 )
