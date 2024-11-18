@@ -13,6 +13,26 @@ import (
 	"github.com/spf13/viper"
 )
 
+const intro = `gart是一个上传豆子碎片文章和管理文章的一个命令行工具。
+它使用 Golang 实现。
+
+已经实现的功能（命令）如下：
+1. upload 上传文章
+2. remove 文章删除
+3. search 根据标题或者关键字查找文章
+4. title 更新文章标题
+5. keyword 更新文章关键字
+6. content 更新文章内容
+7. public 将文章公开
+8. lock 将文章加锁
+9. forcepub 将文章强制公开
+10. init 绑定账号，初始化配置文件
+11. version 打印版本号
+12. markdown 获取Markdown常用语法教程
+13. miniapp 获取豆子碎片小程序码
+14. area 获取有效省份和城市
+15. city 限制文章为同城访问`
+
 var (
 	cfgFile  string
 	token    string
@@ -92,7 +112,7 @@ func GetToken() error {
 	expireAt := viper.GetInt64("expire_at")
 	now := time.Now().Unix()
 	if icode == "" && isecret == "" {
-		return errors.New("警告：请使用 `gart init` 命令初始化配置。")
+		return errors.New("警告：还未绑定账户，请使用 `gart init` 命令初始化配置。")
 	}
 	if now > expireAt {
 		token, err = service.GetToken(icode, isecret)
@@ -119,7 +139,7 @@ var rootCmd = &cobra.Command{
 	Long:  `gart 是文章管理命令行工具，主要用来管理豆子碎片小程序中的文章。`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// CheckBindAccount()
-		fmt.Println("介绍这个工具，组织一些语言。")
+		fmt.Println(intro)
 	},
 }
 

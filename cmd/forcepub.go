@@ -14,7 +14,7 @@ func init() {
 var forcePublicCmd = &cobra.Command{
 	Use:   "forcepub",
 	Short: "强制更新文章公开",
-	Long:  `强制更新文章公开，参数需要UUID，消耗10个豆子点数。`,
+	Long:  `不用通过后台审核，强制更新文章公开，参数需要UUID，消耗10个豆子点数。`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		CheckBindAccount()
