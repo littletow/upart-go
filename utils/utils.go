@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"net"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -63,4 +64,26 @@ func GenVcode(mac string) string {
 	str := WsShareKey + mac
 	mstr := EncodeMD5(str)
 	return mstr
+}
+
+// 对比版本号，返回真需要升级
+func CompareVersion(oldVersion string, newVersion string) bool {
+	oArr := strings.Split(oldVersion, ".")
+	nArr := strings.Split(newVersion, ".")
+	if len(oArr) != 3 || len(nArr) != 3 {
+		return false
+	}
+	o1, _ := strconv.Atoi(oArr[0])
+	n1, _ := strconv.Atoi(nArr[0])
+	if n1 > o1 {
+		return true
+	}
+	o2, _ := strconv.Atoi(oArr[1])
+	n2, _ := strconv.Atoi(nArr[1])
+	if n2 > o2 {
+		return true
+	}
+	o3, _ := strconv.Atoi(oArr[2])
+	n3, _ := strconv.Atoi(nArr[2])
+	return n3 > o3
 }

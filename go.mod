@@ -7,9 +7,9 @@ toolchain go1.22.5
 require (
 	github.com/charmbracelet/bubbletea v1.1.2
 	github.com/charmbracelet/lipgloss v0.13.0
-	github.com/fogleman/ease v0.0.0-20170301025033-8da417bf1776
 	github.com/gorilla/websocket v1.5.3
 	github.com/hajimehoshi/ebiten/v2 v2.8.4
+	github.com/inconshreveable/go-update v0.0.0-20160112193335-8152e7eb6ccf
 	github.com/jedib0t/go-pretty/v6 v6.5.9
 	github.com/lucasb-eyer/go-colorful v1.2.0
 	github.com/spf13/cobra v1.8.1

@@ -71,6 +71,33 @@ const (
 	OPEN_URL  = "https://www.91demo.top/api/open"
 )
 
+// 获取新版本
+func GetNewVersion() (string, error) {
+	url := fmt.Sprintf("%s/gver", OPEN_URL)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+	data, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	var result RespData
+	err = json.Unmarshal(data, &result)
+	if err != nil {
+		return "", err
+	}
+	if result.Code == 1 {
+		return result.Data, nil
+	} else {
+		return "", errors.New(result.Msg)
+	}
+}
+
 // 获取token
 func GetToken(icode string, isecret string) (string, error) {
 	url := fmt.Sprintf("%s/vtoken?icode=%s&isecret=%s", OPEN_URL, icode, isecret)

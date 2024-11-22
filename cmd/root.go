@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"gart/service"
+	"gart/utils"
 	"os"
 	"path"
 	"time"
@@ -32,14 +33,18 @@ const intro = `gart是一个上传豆子碎片文章和管理文章的一个命�
 13. miniapp 获取豆子碎片小程序码
 14. area 获取有效省份和城市
 15. city 限制文章为同城访问
+16. upgrade 升级客户端
 
 gart使用语法：gart 命令
 或使用gart --help获取帮助`
 
+const upText = `存在新版本，可使用gart upgrade升级`
+
 var (
-	cfgFile  string
-	token    string
-	isEnable bool
+	cfgFile      string
+	token        string
+	isEnable     bool
+	isNewVersion bool
 )
 
 func init() {
@@ -92,6 +97,9 @@ func initConfig() {
 		fmt.Println("Cant't read config:", err)
 		os.Exit(1)
 	}
+
+	// 检测版本，若有新版本，则提示用于更新
+	GetNewVersion()
 	// 每次启动都调用token
 	isEnable = viper.GetBool("is_enable")
 	if isEnable {
@@ -106,6 +114,19 @@ func initConfig() {
 		// 	os.Exit(1)
 		// }
 	}
+}
+
+func GetNewVersion() error {
+	ver, err := service.GetNewVersion()
+	if err != nil {
+		fmt.Println("获取新版本号错误,", err)
+		return err
+	}
+	ok := utils.CompareVersion(VERSION, ver)
+	if ok {
+		isNewVersion = true
+	}
+	return nil
 }
 
 func GetToken() error {
@@ -143,6 +164,9 @@ var rootCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// CheckBindAccount()
 		fmt.Println(intro)
+		if isNewVersion {
+			fmt.Println(upText)
+		}
 	},
 }
 
