@@ -38,7 +38,7 @@ const intro = `gart是一个上传豆子碎片文章和管理文章的一个命�
 gart使用语法：gart 命令
 或使用gart --help获取帮助`
 
-const upText = `存在新版本，可使用gart upgrade升级`
+const upText = `***存在新版本，可使用gart upgrade升级***`
 
 var (
 	cfgFile      string
