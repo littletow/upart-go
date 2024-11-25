@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	UpURL       = "升级URL"
+	UpURL       = "https://gitee.com/littletow/upart-go/raw/master/gart.zip"
 	BinFileName = "gart.exe"
 	TxtFileName = "sha256.txt"
 	ZipFileName = "gart.zip"
