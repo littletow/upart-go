@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/inconshreveable/go-update"
 	"github.com/spf13/cobra"
@@ -122,6 +123,7 @@ func unzip(src string) (string, []byte, error) {
 						log.Println(fileName, "read error,", err)
 					} else {
 						chksum = string(ff)
+						chksum = strings.TrimSpace(chksum)
 					}
 				}
 				rc.Close()
