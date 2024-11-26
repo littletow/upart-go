@@ -34,6 +34,7 @@ const intro = `gart是一个上传豆子碎片文章和管理文章的一个命�
 14. area 获取有效省份和城市
 15. city 限制文章为同城访问
 16. upgrade 升级客户端
+17. bean 获取拥有的豆子点数数量
 
 gart使用语法：gart 命令
 或使用gart --help获取帮助`
@@ -109,11 +110,6 @@ func initConfig() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		// points, err = service.GetPoints(token)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// 	os.Exit(1)
-		// }
 	}
 }
 

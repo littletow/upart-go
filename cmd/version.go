@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	VERSION = "3.1.0"
+	VERSION = "3.2.0"
 )
 
 func init() {
@@ -29,5 +29,8 @@ var versionCmd = &cobra.Command{
 		fmt.Println("=====================")
 		fmt.Println("版本 v3.1.0 特性如下：")
 		fmt.Println("1. 新增客户端升级功能")
+		fmt.Println("=====================")
+		fmt.Println("版本 v3.2.0 特性如下：")
+		fmt.Println("1. 获取豆子点数功能")
 	},
 }

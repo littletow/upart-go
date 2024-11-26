@@ -16,7 +16,7 @@ var initCmd = &cobra.Command{
 		if !isEnable {
 			service.ShowBindCode()
 		} else {
-			fmt.Println("已绑定账户")
+			fmt.Println("您客户端已绑定账户，无需重复绑定")
 		}
 
 	},

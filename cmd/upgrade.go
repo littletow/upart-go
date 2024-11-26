@@ -40,7 +40,7 @@ var upgradeCmd = &cobra.Command{
 			}
 
 		} else {
-			fmt.Println("已是最新版本，无需更新")
+			fmt.Println("您客户端已是最新版本，无需更新")
 		}
 	},
 }
