@@ -1,7 +1,7 @@
 @echo off 
 rem package zip file
 echo "start"
-set zipfilename="gart.zip"
+set zipfilename="gart-win10.zip"
 set binfilename="gart.exe"
 set txtfilename="sha256.txt"
 go build -o %binfilename% -ldflags="-s -w" 
