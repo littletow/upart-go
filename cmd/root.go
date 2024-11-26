@@ -45,6 +45,7 @@ var (
 	token        string
 	isEnable     bool
 	isNewVersion bool
+	gVersion     string
 )
 
 func init() {
@@ -122,6 +123,7 @@ func GetNewVersion() error {
 		fmt.Println("获取新版本号错误,", err)
 		return err
 	}
+	gVersion = ver
 	ok := utils.CompareVersion(VERSION, ver)
 	if ok {
 		isNewVersion = true

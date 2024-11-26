@@ -18,7 +18,7 @@ import (
 )
 
 const (
-	UpURL       = "https://gitee.com/littletow/upart-go/raw/master/gart.zip"
+	UpURL       = "https://gitee.com/littletow/upart-go/releases/download"
 	BinFileName = "gart.exe"
 	TxtFileName = "sha256.txt"
 	ZipFileName = "gart.zip"
@@ -32,7 +32,7 @@ var upgradeCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		if isNewVersion {
 			fmt.Println("开始升级")
-			err := doUpdate(UpURL)
+			err := doUpdate()
 			if err != nil {
 				fmt.Printf("升级失败，%v\n", err)
 			} else {
@@ -49,8 +49,9 @@ func init() {
 	rootCmd.AddCommand(upgradeCmd)
 }
 
-func doUpdate(url string) error {
+func doUpdate() error {
 	// 下载源文件
+	url := fmt.Sprintf("%s/v%s/%s", UpURL, gVersion, "gart-win10.zip")
 	resp, err := http.Get(url)
 	if err != nil {
 		return err
