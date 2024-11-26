@@ -33,4 +33,4 @@ gart.exe upload title keyword filename ispub islock
 ## 豆子碎片小程序码
 
 可扫下方小程序码查看效果：
-![alt 豆子碎片](https://gitee.com/littletow/upart-go/raw/master/fonts/visit.jpg)
+![alt 豆子碎片](https://imgs.91demo.top/visit.webp)
